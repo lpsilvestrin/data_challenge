@@ -16,5 +16,6 @@ batch_size = 2
 nn.batch_train(X, y, batch_size)
 err = nn.test(X,y)
 y0 = nn.forward(X[0])
+
 print err
 print y0, y[0]

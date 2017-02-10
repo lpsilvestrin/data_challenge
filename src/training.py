@@ -1,6 +1,6 @@
 import numpy as np
 
-from modular_nn import *
+from modular_nn import Neural_Network_modular
 
 Xtr = np.genfromtxt('../data/Xtr.csv', delimiter=',')
 Ytr = np.genfromtxt('../data/Ytr.csv', delimiter=',',skip_header=1)
@@ -18,14 +18,16 @@ Y_matrix= np.zeros((len(Y_train),10))
 for i in xrange(len(Y_train)):
     Y_matrix[i][int(Y_train[i])]=1
 
-topology = [3072,30, 10]
-X=X_train
-y=Y_test
-nn = Neural_Network_modular(topology, 0.01, X[0], y)
-nn.forward(X[0])
-print nn.output_layer.backward(y[0])
+topology = [3072, 200, 10]
+X_train
+Y=Y_train
+nn = Neural_Network_modular(topology, 0.1, X_train[0], Y_train)
+batch_size = 20
+nn.batch_train(X_train, Y_train, batch_size)
+err = nn.test(X_train, Y_train)
+y_hat0 = nn.forward(X_train[0])
+print "error: ", err
 print "\n"
-print nn.layers[0].W
+print y_hat0
+print Y_train[0]
 
-nn.backward(y[0])
-nn.update()
