@@ -15,6 +15,7 @@ class Layer(object):
         self.x = np.zeros(input_size)
         #output
         self.z = np.zeros(nb_neurons)
+        self.a = np.zeros(nb_neurons)
         # layer gradient
         self.dJdW = np.zeros([input_size, nb_neurons])
         
@@ -54,6 +55,8 @@ class Output_layer(object):
         self.x = np.zeros(input_size)
         #output
         self.a = np.zeros(nb_neurons)
+        
+        self.z = np.zeros(nb_neurons)
         # gradient of the layer
         self.dJdW = np.zeros([input_size, nb_neurons])
         
