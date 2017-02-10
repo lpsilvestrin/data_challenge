@@ -10,7 +10,7 @@ class Layer(object):
         self.activation = activation
         self.activation_prime = activation_prime
         #Weights (parameters)
-        self.W = np.random.randn(self.input_size, self.nb_neurons )
+        self.W = np.random.randn(self.input_size, self.nb_neurons)
         #input
         self.x = np.zeros(input_size)
         #output
@@ -92,8 +92,8 @@ class Neural_Network_modular(object):
         a = self.output_layer.forward(x_tmp)
         return a
 
-    def backward(self, y):
-        delta, W = self.output_layer.backward(y)
+    def backward(self, y_hat):
+        delta, W = self.output_layer.backward(y_hat)
         i = len(self.layers) - 1
         while i >= 0:
             d, next_w = self.layers[i].backward(delta, W)
@@ -105,5 +105,9 @@ class Neural_Network_modular(object):
         self.output_layer.update(self.l_rate)
         for i in range(len(self.layers)):
             self.layers[i].update(self.l_rate)
+            
+	def train(self):
+		return
+		
             
 
