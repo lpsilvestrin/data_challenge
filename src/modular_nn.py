@@ -15,20 +15,28 @@ class Layer(object):
         self.x = np.zeros(input_size)
         #output
         self.z = np.zeros(nb_neurons)
+        # layer gradient
+        self.dJdW = np.zeros([input_size, nb_neurons])
         
     def forward(self,x):
     	self.x = x
         self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
         return self.a
-        
+    
+    # starts back propagation given the target output y and the derivative
+    # of the error function
     def backward(self,next_delta,next_W):
         self.delta=np.dot(next_delta, next_W.T)*self.activation_prime(self.z)
-        self.dJdW=np.outer(self.x, self.delta)
+        # sum gradient of the layer for batch increment
+        self.dJdW += np.outer(self.x, self.delta)
         return self.delta, self.W
-        
+    
+    # update the weights of the layer
     def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
+        ## reset the gradient
+        self.dJdW = np.zeros([self.input_size, self.nb_neurons])
 
 
 class Output_layer(object):
@@ -46,6 +54,8 @@ class Output_layer(object):
         self.x = np.zeros(input_size)
         #output
         self.a = np.zeros(nb_neurons)
+        # gradient of the layer
+        self.dJdW = np.zeros([input_size, nb_neurons])
         
         
     def forward(self,x):
@@ -58,11 +68,15 @@ class Output_layer(object):
     # of the error function
     def backward(self, y):
         self.delta = np.multiply(self.error_prime(y, self.a), self.activation_prime(self.z))
-        self.dJdW = np.outer(self.x, self.delta) 
+        # sum gradient of the layer for batch increment
+        self.dJdW += np.outer(self.x, self.delta) 
         return self.delta, self.W
     
+    # update the weights of the layer
     def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
+        ## reset the gradient
+        self.dJdW = 0
     
 class Neural_Network_modular(object):
     def __init__(self, topology, l_rate, X, Y):
@@ -124,3 +138,12 @@ class Neural_Network_modular(object):
             err += self.error(Y[i], y_hat)
         return err/size
 
+    # batch training
+    # b_size defines the batch size
+    def batch_train(self, X, Y, b_size):
+        size = len(X)
+        it = int(size/b_size)
+        last = size%b_size
+        for i in range(it):
+            x = 0
+           
