@@ -7,9 +7,9 @@ Ytr = np.genfromtxt('../data/Ytr.csv', delimiter=',',skip_header=1)
 #Xte = np.genfromtxt('data/Xte.csv', delimiter=',')
 
 # adding the intercept
-Xtr[:,3072] = 1
-X_train=Xtr[0:4000,:]
-X_test=Xtr[4000:5000,:]
+X = Xtr[:,0:-1]
+X_train=X[0:4000,:]
+X_test=X[4000:5000,:]
 Y = Ytr[:,1]
 
 indptr = range(len(Y)+1)
@@ -20,7 +20,7 @@ for i in xrange(len(Y)):
 Y_train = Y_matrix[0:4000]
 Y_test = Y_matrix[4000:5000]
 
-topology = [3073, 200, 50, 15, 10]
+topology = [3072, 200, 50, 15, 10]
 
 nn = Neural_Network_modular(topology, 0.1, X_train[0], Y_train)
 batch_size = 20

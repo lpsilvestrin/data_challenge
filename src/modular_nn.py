@@ -9,18 +9,19 @@ class Layer(object):
         #activation function and derivative
         self.activation = activation
         self.activation_prime = activation_prime
-        #Weights (parameters)
-        self.W = np.random.randn(self.input_size, self.nb_neurons)
+        #Weights (parameters) w/ biases
+        self.W = np.random.randn(self.input_size+1, self.nb_neurons)
         #input
         self.x = np.zeros(input_size)
         #output
         self.z = np.zeros(nb_neurons)
         self.a = np.zeros(nb_neurons)
-        # layer gradient
-        self.dJdW = np.zeros([input_size, nb_neurons])
+        # layer gradient w/ biases
+        self.dJdW = np.zeros([input_size+1, nb_neurons])
         
-    def forward(self,x):
-    	self.x = x
+    def forward(self, x):
+    	self.x = np.ones(self.input_size+1)
+    	self.x[0:self.input_size] = x[:]
         self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
         return self.a
@@ -45,24 +46,24 @@ class Output_layer(object):
         #sizes
         self.nb_neurons= nb_neurons
         self.input_size = input_size
-        #Weights (parameters)
-        self.W = np.random.randn(self.input_size, self.nb_neurons )
+        #Weights (parameters) w/ biases
+        self.W = np.random.randn(self.input_size+1, self.nb_neurons)
         #activation function and derivative
         self.activation = activation
         self.activation_prime = activation_prime
         self.error_prime = error_prime
-        #input
-        self.x = np.zeros(input_size)
+        #input w/ intercept
+        self.x = np.zeros(input_size+1)
         #output
-        self.a = np.zeros(nb_neurons)
-        
+        self.a = np.zeros(nb_neurons)        
         self.z = np.zeros(nb_neurons)
-        # gradient of the layer
-        self.dJdW = np.zeros([input_size, nb_neurons])
+        # gradient of the layer (w/ biases)
+        self.dJdW = np.zeros([input_size+1, nb_neurons])
         
         
     def forward(self,x):
-    	self.x = x
+    	self.x = np.ones(self.input_size)
+    	self.x[0:self.input_size] = x[:]
         self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
         return self.a
