@@ -11,22 +11,28 @@ class Layer(object):
         self.activation_prime = activation_prime
         #Weights (parameters)
         self.W = np.random.randn(self.input_size, self.nb_neurons )
+        #input
+        self.x = np.zeros(input_size)
+        #output
+        self.z = np.zeros(nb_neurons)
         
     def forward(self,x):
-        self.z=np.dot(x, self.W)
+    	self.x = x
+        self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
+        return self.a
         
-    def backward(self,next_delta):
-        self.delta=np.dot(next_delta, self.W.T)*self.activation_prime(self.z)
-        self.dJdW=np.dot(x.T,self.delta)
-        return self.delta
+    def backward(self,next_delta,next_W):
+        self.delta=np.dot(next_delta, next_W.T)*self.activation_prime(self.z)
+        self.dJdW=np.outer(self.x, self.delta)
+        return self.delta, self.W
         
-    def update(l_rate):
+    def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
 
 
 class Output_layer(object):
-    def __init__(self,input_size, nb_neurons, activation, activation_prime):
+    def __init__(self,input_size, nb_neurons, activation, activation_prime, error_prime):
         #sizes
         self.nb_neurons= nb_neurons
         self.input_size = input_size
@@ -35,18 +41,25 @@ class Output_layer(object):
         #activation function and derivative
         self.activation = activation
         self.activation_prime = activation_prime
+        self.error_prime = error_prime
+        #input
+        self.x = np.zeros(input_size)
+        #output
+        self.a = np.zeros(nb_neurons)
+        
         
     def forward(self,x):
-        self.z=np.dot(x, self.W)
+    	self.x = x
+        self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
         return self.a
        
     # starts back propagation given the target output y and the derivative
     # of the error function
-    def backward(self, y, error_prime):
-        self.delta = np.multiply(error_prime(y, self.a), self.activation_prime(self.z))
-        self.dJdW = np.dot(self.a2.T, delta) 
-        return self.delta
+    def backward(self, y):
+        self.delta = np.multiply(self.error_prime(y, self.a), self.activation_prime(self.z))
+        self.dJdW = np.outer(self.x, self.delta) 
+        return self.delta, self.W
     
     def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
@@ -69,7 +82,7 @@ class Neural_Network_modular(object):
             l = Layer(topology[i-1], topology[i], self.activation, self.activation_prime)
             self.layers.append(l)
             i = i + 1
-        self.output_layer = Output_layer(topology[-2], topology[-1], self.activation, self.activation_prime )
+        self.output_layer = Output_layer(topology[-2], topology[-1], self.activation, self.activation_prime, self.error_prime)
         
     def forward(self, X):
         x_tmp = X
@@ -79,12 +92,13 @@ class Neural_Network_modular(object):
         a = self.output_layer.forward(x_tmp)
         return a
 
-    def backward(self, y, y_hat):
-        delta = self.output_layer.backward(self.error_prime)
+    def backward(self, y):
+        delta, W = self.output_layer.backward(y)
         i = len(self.layers) - 1
         while i >= 0:
-            d = self.layers[i].backward(delta)
+            d, next_w = self.layers[i].backward(delta, W)
             delta = d
+            W = next_w
             i -= 1
 	
     def update(self):
