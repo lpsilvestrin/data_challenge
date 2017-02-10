@@ -13,11 +13,8 @@ topology = [5, 10, 7, 2]
 nn = Neural_Network_modular(topology, 0.01, X, y)
 
 
-y_hat = nn.forward(X[0])
-
-print nn.output_layer.backward(y[0])
-print "\n"
-print nn.layers[0].W
-
-nn.backward(y[0])
-nn.update()
+nn.stoch_train(X, y)
+err = nn.test(X,y)
+y0 = nn.forward(X[0])
+print err
+print y0, y[0]

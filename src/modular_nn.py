@@ -108,8 +108,19 @@ class Neural_Network_modular(object):
         for i in range(len(self.layers)):
             self.layers[i].update(self.l_rate)
             
-	def train(self):
-		return
-		
-            
+    #stochastic training
+    def stoch_train(self, X, Y):
+        size = len(X)
+        for i in range(size):
+            self.forward(X[i])
+            self.backward(Y[i])
+            self.update()
+			
+    def test(self, X, Y):
+        size = len(X)
+        err = 0
+        for i in range(size):
+            y_hat = self.forward(X[i])
+            err += self.error(Y[i], y_hat)
+        return err/size
 
