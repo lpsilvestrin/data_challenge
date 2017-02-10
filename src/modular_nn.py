@@ -84,7 +84,6 @@ class Neural_Network_modular(object):
             i = i + 1
         self.output_layer = Output_layer(topology[-2], topology[-1], self.activation, self.activation_prime, self.error_prime)
     
-    
     def forward(self, X):
         x_tmp = X
         for i in range(len(self.layers)):
@@ -94,7 +93,7 @@ class Neural_Network_modular(object):
         return a
 
 	# do the backpropagation to calculate the gradient
-	# input : y -- result of the forward fase
+	# input : y -- class of the input of the forward fase
     def backward(self, y):
         delta, W = self.output_layer.backward(y)
         i = len(self.layers) - 1
