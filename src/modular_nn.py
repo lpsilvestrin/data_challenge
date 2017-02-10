@@ -144,6 +144,11 @@ class Neural_Network_modular(object):
         size = len(X)
         it = int(size/b_size)
         last = size%b_size
+        e = 0 # example index
         for i in range(it):
-            x = 0
+            for j in range(b_size):
+                self.forward(X[e])
+                self.backward(Y[e])
+                e += 1
+            self.update()
            
