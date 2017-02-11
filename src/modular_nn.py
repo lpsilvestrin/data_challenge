@@ -29,7 +29,7 @@ class Layer(object):
     # starts back propagation given the target output y and the derivative
     # of the error function
     def backward(self,next_delta,next_W):
-        self.delta=np.dot(next_delta, next_W.T)*self.activation_prime(self.z)
+        self.delta=np.dot(next_delta, (next_W[0:-1,:]).T)*self.activation_prime(self.z)
         # sum gradient of the layer for batch increment
         self.dJdW += np.outer(self.x, self.delta)
         return self.delta, self.W
@@ -38,7 +38,7 @@ class Layer(object):
     def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
         ## reset the gradient
-        self.dJdW = np.zeros([self.input_size, self.nb_neurons])
+        self.dJdW = np.zeros([self.input_size+1, self.nb_neurons])
 
 
 class Output_layer(object):
@@ -58,11 +58,11 @@ class Output_layer(object):
         self.a = np.zeros(nb_neurons)        
         self.z = np.zeros(nb_neurons)
         # gradient of the layer (w/ biases)
-        self.dJdW = np.zeros([input_size+1, nb_neurons])
+        self.dJdW = np.zeros([self.input_size+1, self.nb_neurons])
         
         
     def forward(self,x):
-    	self.x = np.ones(self.input_size)
+    	self.x = np.ones(self.input_size+1)
     	self.x[0:self.input_size] = x[:]
         self.z=np.dot(self.x, self.W)
         self.a=self.activation(self.z)
@@ -80,7 +80,7 @@ class Output_layer(object):
     def update(self, l_rate):
         self.W = self.W - l_rate * self.dJdW
         ## reset the gradient
-        self.dJdW = 0
+        self.dJdW = np.zeros([self.input_size+1, self.nb_neurons])
     
 class Neural_Network_modular(object):
     def __init__(self, topology, l_rate, X, Y):
