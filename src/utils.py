@@ -14,3 +14,18 @@ def mean_square(y, y_hat):
 	
 def mean_square_prime(y, y_hat):
 	return -(y - y_hat)
+
+def create_back_up(nn):
+    for i in xrange(len(nn.layers)):
+        name=str(i)+'.out'
+        np.savetxt(name,nn.layers[i].W, delimiter=',')
+    print "output layer ",i
+    print nn.output_layer.W.shape
+    np.savetxt("output.out",nn.output_layer.W, delimiter=',')
+    print "backup created"
+def upload_back_up(nn):
+    for i in xrange(len(nn.layers)):
+        name=str(i)+'.out'
+        nn.layers[i].W=np.genfromtxt(name, delimiter=',')
+    nn.output_layer.W=np.genfromtxt("output.out", delimiter=',')
+    print "backup uploaded"

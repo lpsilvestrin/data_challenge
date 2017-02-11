@@ -1,6 +1,8 @@
 import numpy as np
 
 from modular_nn import Neural_Network_modular
+from utils import create_back_up
+from utils import upload_back_up
 
 Xtr = np.genfromtxt('../data/Xtr.csv', delimiter=',')
 Ytr = np.genfromtxt('../data/Ytr.csv', delimiter=',',skip_header=1)
