@@ -14,3 +14,9 @@ def mean_square(y, y_hat):
 	
 def mean_square_prime(y, y_hat):
 	return -(y - y_hat)
+	
+def accuracy(y, y_hat):
+	acc = 0;
+	if y == y_hat:
+		acc += 1;
+	return acc
