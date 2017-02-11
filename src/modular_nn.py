@@ -20,6 +20,7 @@ class Layer(object):
         self.dJdW = np.zeros([input_size+1, nb_neurons])
         
     def forward(self, x):
+        # inser bias
     	self.x = np.ones(self.input_size+1)
     	self.x[0:self.input_size] = x[:]
         self.z=np.dot(self.x, self.W)
@@ -29,6 +30,7 @@ class Layer(object):
     # starts back propagation given the target output y and the derivative
     # of the error function
     def backward(self,next_delta,next_W):
+        # remove the bias of next layer's weights
         self.delta=np.dot(next_delta, (next_W[0:-1,:]).T)*self.activation_prime(self.z)
         # sum gradient of the layer for batch increment
         self.dJdW += np.outer(self.x, self.delta)
@@ -62,6 +64,7 @@ class Output_layer(object):
         
         
     def forward(self,x):
+        #insert bias
     	self.x = np.ones(self.input_size+1)
     	self.x[0:self.input_size] = x[:]
         self.z=np.dot(self.x, self.W)
