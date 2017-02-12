@@ -36,6 +36,13 @@ class Conv_layer():
             for i in range(input_channels):
                 # convolution w/ flipped kernel
                 self.dJdW[d,i] += signal.convolve2d(self.X[i], next_delta[d],mode='valid')
+        delta = np.zeros(self.input_shape)
+        self.mat2kernel()
+        for k in range(input_channels):
+            for f in range(nb_features):
+                delta[k] += signal.convolve2d(self.W[f,k], next_delta[f])
+        self.kernel2mat()
+        return delta
         
     def update(self, l_rate):
         self.mat2kernel()

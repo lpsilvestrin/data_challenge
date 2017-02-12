@@ -123,6 +123,7 @@ class Neural_Network_modular(object):
             delta = d
             W = next_w
             i -= 1
+        return delta, W
 	
     def update(self):
         self.output_layer.update(self.l_rate)
